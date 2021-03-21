@@ -25,9 +25,9 @@ class Command:
 
         async for output in cmd.get("func")(tuple(words), *args, **kwargs):
             if isinstance(output, str):
-                con.notice(nick, f"{cmd}: {output}")
+                con.notice(nick, f"{cmd['name']}: {output}")
             else:
-                con.notice(nick, f"{cmd}")
+                con.notice(nick, f"{cmd['name']}")
                 for line in output:
                     con.notice(nick, f"{line}")
 
