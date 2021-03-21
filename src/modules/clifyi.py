@@ -7,6 +7,7 @@ from core.plugins import Plugin, register_plugin
 
 URL = "https://cli.fyi/{}"
 
+
 @lru_cache
 async def fetch(
     url: str, session: ClientSession, response_type="json"
@@ -44,7 +45,9 @@ class CliFyiPlugin(Plugin):
             yield self.repr(response)
 
 
-@register_plugin
+@register_plugin(
+    name="iplookup", description="lookup ip location", arguments="8.8.8.8 1.1.1.1 ..."
+)
 class IPLookup(CliFyiPlugin):
     RESPONSE_TYPE = "json"
 
@@ -58,7 +61,11 @@ class IPLookup(CliFyiPlugin):
         return f"{organisation}, {country} ({country_code})"
 
 
-@register_plugin
+@register_plugin(
+    name="whois",
+    description="query whois domain",
+    arguments="efnet.net freenode.net ...",
+)
 class WhoIs(CliFyiPlugin):
     RESPONSE_TYPE = "json"
 

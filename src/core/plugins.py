@@ -16,16 +16,23 @@ class NameConflictError(Exception):
         self.message = message
 
 
-def register_plugin(plugin_class):
-    name = plugin_class.__name__.lower()
-    if name in PLUGINS:
-        raise NameConflictError(
-            f"Plugin name conflict: '{name}'. Double check"
-            " that all plugins have unique names."
-        )
-    plugin = plugin_class()
-    PLUGINS[name] = plugin
-    return plugin
+def register_plugin(name: str, description: str, arguments: str):
+    def wrapper(plugin_class):
+        if name in PLUGINS:
+            raise NameConflictError(
+                f"Plugin name conflict: '{name}'. Double check"
+                " that all plugins have unique names."
+            )
+        plugin = plugin_class()
+        PLUGINS[name] = {
+            "name": name,
+            "description": description,
+            "arguments": arguments,
+            "func": plugin,
+        }
+        return plugin
+
+    return wrapper
 
 
 def get_plugins():

@@ -18,10 +18,12 @@ class Command:
             con.notice(nick, "Missing argument(s). Use <command> <args> or run help.")
             return
 
-        if not PLUGINS.get(cmd, None):
+        cmd = PLUGINS.get(cmd, None)
+
+        if not cmd:
             return Command.not_found(con, event)
 
-        async for output in PLUGINS[cmd](tuple(words), *args, **kwargs):
+        async for output in cmd.get("func")(tuple(words), *args, **kwargs):
             if isinstance(output, str):
                 con.notice(nick, f"{cmd}: {output}")
             else:
@@ -32,14 +34,14 @@ class Command:
     @staticmethod
     def not_found(con=None, event=None):
         con.notice(
-           event.source.nick, "Don't know what to do with: " + event.arguments[0]
+            event.source.nick, "Don't know what to do with: " + event.arguments[0]
         )
 
     @staticmethod
     def help(con=None, event=None):
         msg = ["Available commands:"]
-        for cmd in PLUGINS.keys():
-            msg.append(f"\t{cmd}")
+        for cmd, info in PLUGINS.items():
+            msg.append(f"\t{cmd} {info['arguments']}: {info['description']}")
 
         nick = event.source.nick
 

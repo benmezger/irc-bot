@@ -12,7 +12,9 @@ async def fetch(url: str, session: ClientSession) -> str:
         return await response.text()
 
 
-@register_plugin
+@register_plugin(
+    name="weather", description="check the weather", arguments="amsterdam paris ..."
+)
 class Weather(Plugin):
     async def __call__(self, cities: Sequence[str]) -> str:
         cities = list(cities)
