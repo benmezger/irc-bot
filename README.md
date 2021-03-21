@@ -36,15 +36,17 @@ implementing the following class:
 ```python
 from core.plugins import Plugin, register_plugin
 
-@register_plugin
+@register_plugin(
+    name="weather", description="check the weather", arguments="amsterdam paris ..."
+)
 class CommandName(Plugin):
     async def __call__(self, msg: Sequence[str]) -> str:
         ...
 
 ```
 
-This will create a new command on the name of `CommandName`. The command receives
-one argument which the command arguments received. For example, user X sends `commandname arg1 arg2`,
+This will create a new command on the name of `weather`. The command supports
+multiple cities to be queried. For example, user X sends `commandname arg1 arg2`,
 thus msg will be `[arg1, arg2]`.
 
 ## License
